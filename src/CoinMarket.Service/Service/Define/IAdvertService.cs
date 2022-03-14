@@ -8,5 +8,6 @@ namespace CoinMarket.Service.Service.Define
     public interface IAdvertService
     {
         Task<IDataResult<List<AdvertDto>>> GetAdverts();
+        Task<IDataResult<AdvertDto>> GetAdvertById(int id);
     }
 }

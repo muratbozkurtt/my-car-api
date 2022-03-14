@@ -10,8 +10,8 @@ namespace CoinMarker.Infrastructure.AutoMapperMappings
     {
         public MappingProfile()
         {
-            CreateMap<AdvertDto, AdvertDto>();
-            CreateMap<Advert, AdvertDto>();
+            CreateMap<AdvertDto, AdvertDto>().ReverseMap();
+            CreateMap<Advert, AdvertDto>().ReverseMap();
         }
     }
 }

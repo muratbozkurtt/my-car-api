@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CoinMarker.Infrastructure.Dto;
-using CoinMarker.Infrastructure.Entity;
 using CoinMarker.Infrastructure.Response;
 using CoinMarket.Data.Repository;
 using CoinMarket.Service.Service.Define;
@@ -23,7 +22,13 @@ namespace CoinMarket.Service.Service
         public async Task<IDataResult<List<AdvertDto>>> GetAdverts()
         {
             var adverts = await _advertRepository.GetAdverts();
-            return new SuccessDataResult<List<AdvertDto>>(_mapper.Map<List<Advert>, List<AdvertDto>>(adverts));
+            return new SuccessDataResult<List<AdvertDto>>(_mapper.Map<List<AdvertDto>>(adverts));
+        }
+
+        public async Task<IDataResult<AdvertDto>> GetAdvertById(int id)
+        {
+            var adverts = await _advertRepository.GetAdverts();
+            return new SuccessDataResult<AdvertDto>(_mapper.Map<AdvertDto>(adverts[0]));
         }
     }
 }
