@@ -1,5 +1,4 @@
-using CoinMarket.Data.Context;
-using CoinMarket.Data.DataGenerator;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,8 +13,6 @@ namespace CoinMarket.Api
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                services.GetRequiredService<UserDbContext>();
-                DataGenerator.Initialize(services);
             }
             host.Run();
         }

@@ -26,6 +26,17 @@ namespace CoinMarket.Api.Controllers
                 return BadRequest(result);
             }
             return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAdvertById([FromRoute] int id)
+        {
+            var result = await _advertService.GetAdvertById(id);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
 
         }
 

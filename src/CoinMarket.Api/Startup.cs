@@ -1,17 +1,8 @@
-using System;
 using System.Reflection;
 using AutoMapper;
-using CoinMarker.Infrastructure.Helper;
-using CoinMarker.Infrastructure.Settings;
-using CoinMarket.Api.Extension;
-using CoinMarket.Api.Logger;
-using CoinMarket.Data.Context;
-using CoinMarket.Data.Repository;
-using CoinMarket.Service.Service;
-using CoinMarket.Service.Service.Define;
+using CoinMarket.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,10 +15,8 @@ namespace CoinMarket.Api
 {
     public class Startup
     {
-        public Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment { get; set; }
-        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment )
+        public Startup(IConfiguration configuration )
         {
-            _hostingEnvironment = hostingEnvironment;
             Configuration = configuration;
         }
 
@@ -42,24 +31,14 @@ namespace CoinMarket.Api
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyCar.Api", Version = "v1"});
             });
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddDbContext<UserDbContext>(options => options.UseInMemoryDatabase(databaseName: "User"));
-            services.AddScoped<ICoinService, CoinService>();
-            services.AddScoped<IAdvertService, AdvertService>();
-            services.AddScoped<IAdvertRepository, AdvertRepository>();
-
-            services.AddScoped(typeof(IApiHelper<>), typeof(ApiHelper<>));
-            
+            //services.AddAutoMapper(Assembly.GetExecutingAssembly());   
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
             });
-            
-            var configSection = Configuration.GetSection("AppSettings");
-            var settings = new AppSettings();
-            configSection.Bind(settings);
 
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.ConfigureRepositoryWrapper(Configuration);
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
@@ -67,24 +46,16 @@ namespace CoinMarket.Api
             services.AddControllers();
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
-
             services.AddOptions();
-            services.AddAntiforgery(options => { options.Cookie.Expiration = TimeSpan.Zero; });
-            services.AddJwtAuthentication(Configuration);
-
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-
-            services.Configure<CoinServiceSettings>(Configuration.GetSection("CoinServiceSettings"));
-            services.Configure<CoinMarketApiSettings>(Configuration.GetSection("CoinMarketApiSetting"));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddProvider(new LoggerProvider(_hostingEnvironment));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -92,7 +63,6 @@ namespace CoinMarket.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoinMarket.Api v1"));
             }
             // app.UseHttpsRedirection();
-            app.UseMiddleware<JWTMiddleware>();
             app.UseRouting();
             
             app.UseCors(x => x
@@ -102,8 +72,7 @@ namespace CoinMarket.Api
                 .AllowAnyHeader());
 
             app.UseAuthorization();
-            app.UseAuthentication();
-            
+            app.UseAuthentication();          
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

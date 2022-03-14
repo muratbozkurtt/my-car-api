@@ -1,4 +1,4 @@
-using CoinMarket.Api.Filter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoinMarket.Api.Controllers
