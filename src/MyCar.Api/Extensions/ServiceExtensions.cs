@@ -3,10 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using MyCar.Service.Service.Define;
 using MyCar.Data;
-using AutoMapper;
 using MyCar.Data.Repository;
 using MyCar.Service.Service;
-using MyCar.Infrastructure.AutoMapperMappings;
 
 namespace MyCar.Api.Extensions
 {
@@ -19,18 +17,9 @@ namespace MyCar.Api.Extensions
 
             var configSection = configuration.GetSection("DBSettings");
             var settings = new DBSettings();
-            configSection.Bind(settings);
-
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
-
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            configSection.Bind(settings);;
 
             services.Configure<DBSettings>(configuration.GetSection("DBSettings"));
-
         }
     }
 }
