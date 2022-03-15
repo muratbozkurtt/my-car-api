@@ -7,7 +7,8 @@ namespace MyCar.Service.Service.Define
 {
     public interface IAdvertService
     {
-        Task<IDataResult<PaginatedList<Advert>>> GetAdverts(GetAllAdvertsRequest request);
-        Task<IDataResult<Advert>> GetAdvertById(int id);
+        Task<IDataResult<PaginatedList<Advert>>> GetAdvertsAsync(GetAllAdvertsRequest request);
+        Task<IDataResult<Advert>> GetAdvertByIdAsync(int id);
+        Task<IDataResult<bool>> AddAdvertVisitAsync(int advertId);
     }
 }

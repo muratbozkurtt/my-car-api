@@ -5,13 +5,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DbConnection=Server=msSqlDb;Database=MyCar;User Id=sa;Password=Mycar123@"
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "8000:80"
-    restart: unless-stopped
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+    restart: on-failure
+    networks:
       - backend
     links: 
-      - msSqlDb # This service depends on redis. Start that first.
+      - msSqlDb
      
   msSqlDb:
     container_name: msSqlDb
@@ -24,7 +25,7 @@ services:
       ACCEPT_EULA: "Y"
     volumes:
       - ./sqlserver-data1:/var/lib/sqlserver/data
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+    networks:
       - backend
 
 networks:

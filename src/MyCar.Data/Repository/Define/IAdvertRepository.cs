@@ -8,8 +8,8 @@ namespace MyCar.Data.Repository
 {
     public interface IAdvertRepository
     {
-        Task<PaginatedList<Advert>> GetAdverts(GetAllAdvertsRequest request);
-        Task<Advert> GetAdvertById(int id);
-        Task<bool> AddAdvertVisit(AddAdvertVisitRequest request);
+        Task<PaginatedList<Advert>> GetAdvertsAsync(GetAllAdvertsRequest request);
+        Task<Advert> GetAdvertByIdAsync(int id);
+        Task<bool> AddAdvertVisitAsync(AddAdvertVisitRequest request);
     }
 }

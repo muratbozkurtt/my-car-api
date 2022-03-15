@@ -21,21 +21,21 @@ namespace MyCar.Service.Service
         }
 
         //TODO: we can use auto mapper or converter for dtos
-        public async Task<IDataResult<PaginatedList<Advert>>> GetAdverts(GetAllAdvertsRequest request)
+        public async Task<IDataResult<PaginatedList<Advert>>> GetAdvertsAsync(GetAllAdvertsRequest request)
         {
-            var adverts = await _advertRepository.GetAdverts(request);
+            var adverts = await _advertRepository.GetAdvertsAsync(request);
             return new SuccessDataResult<PaginatedList<Advert>>(adverts);
         }
 
-        public async Task<IDataResult<Advert>> GetAdvertById(int id)
+        public async Task<IDataResult<Advert>> GetAdvertByIdAsync(int id)
         {
-            var advert = await _advertRepository.GetAdvertById(id);
+            var advert = await _advertRepository.GetAdvertByIdAsync(id);
             return new SuccessDataResult<Advert>(advert);
         }
 
-        public async Task<IDataResult<bool>> AddAdvertVisit(int advertId)
+        public async Task<IDataResult<bool>> AddAdvertVisitAsync(int advertId)
         {
-            var advert = await _advertRepository.GetAdvertById(advertId);
+            var advert = await _advertRepository.GetAdvertByIdAsync(advertId);
             if (advert == null)
             {
                 return new ErrorDataResult<bool>(MessageWrite.Write("No advert found."));
@@ -43,10 +43,10 @@ namespace MyCar.Service.Service
             var addAdvertVisit = new AddAdvertVisitRequest()
             {
                 AdvertId = advertId,
-                IpAdress = _applicationContext.IpAddress,
+                IpAddress = _applicationContext.IpAddress,
                 VisitDate = System.DateTime.Now
             };
-            var result = await _advertRepository.AddAdvertVisit(addAdvertVisit);
+            var result = await _advertRepository.AddAdvertVisitAsync(addAdvertVisit);
             return new SuccessDataResult<bool>(result);
         }
     }

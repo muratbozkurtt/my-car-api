@@ -18,9 +18,9 @@ namespace MyCar.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAdverts([FromRoute] GetAllAdvertsRequest request)
+        public async Task<IActionResult> GetAdvertsAsync([FromQuery] GetAllAdvertsRequest request)
         {
-            var result = await _advertService.GetAdverts(request);
+            var result = await _advertService.GetAdvertsAsync(request);
             if (result.Data == null)
             {
                 return NoContent();
@@ -29,14 +29,25 @@ namespace MyCar.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAdvertById([FromRoute] int id)
+        public async Task<IActionResult> GetAdvertByIdAsync([FromRoute] int id)
         {
-            var result = await _advertService.GetAdvertById(id);
+            var result = await _advertService.GetAdvertByIdAsync(id);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
             return Ok(result);
+        }
+
+        [HttpPost("{advertId}/visit")] 
+        public async Task<IActionResult> AddAdvertVisitAsync([FromRoute] int advertId)
+        {
+            var result = await _advertService.AddAdvertVisitAsync(advertId);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Created("", null);
         }
 
     }

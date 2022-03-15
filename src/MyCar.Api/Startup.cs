@@ -69,7 +69,6 @@ namespace MyCar.Api
             app.UseRouting();
             
             app.UseCors(x => x
-                .WithOrigins("http://localhost:5090", "https://localhost:5091", "http://localhost:8080")
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());

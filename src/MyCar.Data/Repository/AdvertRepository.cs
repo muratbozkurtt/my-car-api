@@ -24,7 +24,7 @@ namespace MyCar.Data.Repository
             _dBSettings = dbSettings;
             _db = new SqlConnection(_dBSettings.Value.DatabaseConnection);
         }
-        public async Task<PaginatedList<Advert>> GetAdverts(GetAllAdvertsRequest request)
+        public async Task<PaginatedList<Advert>> GetAdvertsAsync(GetAllAdvertsRequest request)
         {
             StringBuilder searchQuery = new StringBuilder();
             StringBuilder filterQuery = new StringBuilder();
@@ -82,22 +82,22 @@ namespace MyCar.Data.Repository
             var result = new PaginatedList<Advert>(adverts, searchQueryCount, request.PageSize, request.PageNumber);
             return result;
         }
-        public async Task<Advert> GetAdvertById(int id)
+        public async Task<Advert> GetAdvertByIdAsync(int id)
         {
             string query = @"Select * From Advert (nolock) Where Id=@id";
             var result = await _db.QueryAsync<Advert>(query, new { id });
             return result.FirstOrDefault();
         }
 
-        public async Task<bool> AddAdvertVisit(AddAdvertVisitRequest request)
+        public async Task<bool> AddAdvertVisitAsync(AddAdvertVisitRequest request)
         {
             string query = @"INSERT INTO AdvertVisit(AdvertId,IpAddress,VisitDate) VALUES(@AdvertId,@IpAddress,@VisitDate);
-                            SELECT LAST_INSERT_ID();";
+                             SELECT SCOPE_IDENTITY();";
 
             var result = await _db.ExecuteAsync(query, new
             {
                 request.AdvertId,
-                request.IpAdress,
+                request.IpAddress,
                 request.VisitDate
             });
 
