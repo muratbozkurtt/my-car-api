@@ -10,5 +10,6 @@ namespace MyCar.Infrastructure.Request
         public decimal? Price { get; set; }
         public string Gear { get; set; }
         public string Fuel { get; set; }
+        public string SortOrder { get; set; }
     }
 }

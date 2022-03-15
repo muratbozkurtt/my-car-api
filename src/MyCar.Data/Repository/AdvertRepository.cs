@@ -9,6 +9,8 @@ using MyCar.Infrastructure.Entity;
 using MyCar.Infrastructure.Request;
 using MyCar.Infrastructure.Response;
 using System.Text;
+using MyCar.Infrastructure.Helper;
+using MyCar.Infrastructure.Constans;
 
 namespace MyCar.Data.Repository
 {
@@ -37,12 +39,44 @@ namespace MyCar.Data.Repository
                 filterQuery.Append(" AND CategoryId=@CategoryId ");
             }
 
+            if (request.Price != null)
+            {
+                searchQuery.Append(" AND Price=@Price ");
+                filterQuery.Append(" AND Price=@Price ");
+            }
+
+            if (request.Gear != null)
+            {
+                searchQuery.Append(" AND Gear=@Gear ");
+                filterQuery.Append(" AND Gear=@Gear ");
+            }
+
+            if (request.Fuel != null)
+            {
+                searchQuery.Append(" AND Fuel=@Fuel ");
+                filterQuery.Append(" AND Fuel=@Fuel ");
+            }
+
             query.Append(searchQuery);
             query.Append(filterQuery);
 
-            query.Append(" ORDER BY ID OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
+            if (!(request.SortOrder == AdvertSorts.Price || request.SortOrder == AdvertSorts.Km || request.SortOrder == request.Fuel))
+            {
+                request.SortOrder = "Id";
+            }
 
-            var multipleQuery = await _db.QueryMultipleAsync(query.ToString(), new { request.PageSize, request.PageNumber, request.CategoryId });
+            query.Append($" ORDER BY {request.SortOrder} DESC OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
+
+            var multipleQuery = await _db.QueryMultipleAsync(query.ToString(),
+                              new
+                              {
+                                  request.PageSize,
+                                  request.PageNumber,
+                                  request.CategoryId,
+                                  request.Price,
+                                  request.Gear,
+                                  request.Fuel
+                              });
             var searchQueryCount = multipleQuery.Read<int>().FirstOrDefault();
             List<Advert> adverts = multipleQuery.Read<Advert>().ToList();
             var result = new PaginatedList<Advert>(adverts, searchQueryCount, request.PageSize, request.PageNumber);
