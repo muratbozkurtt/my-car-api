@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using MyCar.Data.Repository;
-using MyCar.Infrastructure.Dto;
+﻿using MyCar.Data.Repository;
+using MyCar.Infrastructure.Entity;
+using MyCar.Infrastructure.Request;
 using MyCar.Infrastructure.Response;
 using MyCar.Service.Service.Define;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MyCar.Service.Service
@@ -11,24 +10,23 @@ namespace MyCar.Service.Service
     public class AdvertService : IAdvertService
     {
         private readonly IAdvertRepository _advertRepository;
-        private readonly IMapper _mapper;
 
-        public AdvertService(IAdvertRepository advertRepository, IMapper mapper)
+        public AdvertService(IAdvertRepository advertRepository)
         {
             _advertRepository = advertRepository;
-            _mapper = mapper;
         }
 
-        public async Task<IDataResult<List<AdvertDto>>> GetAdverts()
+        //TODO: we can use auto mapper or converter for dtos
+        public async Task<IDataResult<PaginatedList<Advert>>> GetAdverts(PaginationRequest paginationRequest)
         {
-            var adverts = await _advertRepository.GetAdverts();
-            return new SuccessDataResult<List<AdvertDto>>(_mapper.Map<List<AdvertDto>>(adverts));
+            var adverts = await _advertRepository.GetAdverts(paginationRequest);
+            return new SuccessDataResult<PaginatedList<Advert>>(adverts);
         }
 
-        public async Task<IDataResult<AdvertDto>> GetAdvertById(int id)
+        public async Task<IDataResult<Advert>> GetAdvertById(int id)
         {
-            var adverts = await _advertRepository.GetAdverts();
-            return new SuccessDataResult<AdvertDto>(_mapper.Map<AdvertDto>(adverts[0]));
+            var advert = await _advertRepository.GetAdvertById(id);
+            return new SuccessDataResult<Advert>(advert);
         }
     }
 }

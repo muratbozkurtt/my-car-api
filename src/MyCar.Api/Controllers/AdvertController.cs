@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyCar.Infrastructure.Request;
 using MyCar.Service.Service.Define;
 
 namespace MyCar.Api.Controllers
@@ -11,19 +12,18 @@ namespace MyCar.Api.Controllers
     public class AdvertController : BaseController
     {
         private IAdvertService _advertService;
-
         public AdvertController(IAdvertService advertService)
         {
             _advertService = advertService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAdverts()
+        public async Task<IActionResult> GetAdverts([FromRoute] PaginationRequest request)
         {
-            var result = await _advertService.GetAdverts();
-            if (!result.IsSuccess)
+            var result = await _advertService.GetAdverts(request);
+            if (result?.Data == null)
             {
-                return BadRequest(result);
+                return NoContent();
             }
             return Ok(result);
         }
@@ -37,7 +37,6 @@ namespace MyCar.Api.Controllers
                 return BadRequest(result);
             }
             return Ok(result);
-
         }
 
     }

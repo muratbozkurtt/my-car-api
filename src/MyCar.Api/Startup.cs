@@ -1,5 +1,3 @@
-using System.Reflection;
-using AutoMapper;
 using MyCar.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using MyCar.Api.Middleware;
 
 namespace MyCar.Api
 {
@@ -70,6 +69,8 @@ namespace MyCar.Api
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthorization();
             app.UseAuthentication();          
