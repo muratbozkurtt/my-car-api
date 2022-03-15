@@ -8,7 +8,7 @@ namespace MyCar.Data.Repository
 {
     public interface IAdvertRepository
     {
-        Task<PaginatedList<Advert>> GetAdverts(PaginationRequest paginationRequest);
+        Task<PaginatedList<Advert>> GetAdverts(GetAllAdvertsRequest request);
         Task<Advert> GetAdvertById(int id);
     }
 }

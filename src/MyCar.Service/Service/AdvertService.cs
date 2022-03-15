@@ -17,9 +17,9 @@ namespace MyCar.Service.Service
         }
 
         //TODO: we can use auto mapper or converter for dtos
-        public async Task<IDataResult<PaginatedList<Advert>>> GetAdverts(PaginationRequest paginationRequest)
+        public async Task<IDataResult<PaginatedList<Advert>>> GetAdverts(GetAllAdvertsRequest request)
         {
-            var adverts = await _advertRepository.GetAdverts(paginationRequest);
+            var adverts = await _advertRepository.GetAdverts(request);
             return new SuccessDataResult<PaginatedList<Advert>>(adverts);
         }
 

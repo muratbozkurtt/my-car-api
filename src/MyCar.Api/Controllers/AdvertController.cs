@@ -18,10 +18,10 @@ namespace MyCar.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAdverts([FromRoute] PaginationRequest request)
+        public async Task<IActionResult> GetAdverts([FromRoute] GetAllAdvertsRequest request)
         {
             var result = await _advertService.GetAdverts(request);
-            if (result?.Data == null)
+            if (result.Data == null)
             {
                 return NoContent();
             }

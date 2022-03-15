@@ -21,15 +21,24 @@ namespace MyCar.Data.Repository
             _dBSettings = dbSettings;
             _db = new SqlConnection(_dBSettings.Value.DatabaseConnection);
         }
-        public async Task<PaginatedList<Advert>> GetAdverts(PaginationRequest paginationRequest)
+        public async Task<PaginatedList<Advert>> GetAdverts(GetAllAdvertsRequest request)
         {
-            string query = @"Select COUNT(*) From Advert (nolock)
-                           Select * From Advert (nolock) ORDER BY ID OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+            string searchQuery = "Select COUNT(Distinct(Id)) From Advert (nolock) Where 1=1";
+            string filterQuery = "Select * From Advert (nolock) Where 1=1";
+            var query = string.Concat(searchQuery, filterQuery);
 
-            using var multipleQuery = await _db.QueryMultipleAsync(query, new { paginationRequest.PageSize, paginationRequest.PageNumber });
-            var count = multipleQuery.Read<int>().FirstOrDefault();
+            if (request.CategoryId != null)
+            {
+                string.Concat(query, "CategoryId=@CategoryId");
+                string.Concat(searchQuery, "CategoryId=@CategoryId");
+            }
+
+            string.Concat(query, "ORDER BY ID OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
+
+            var multipleQuery = await _db.QueryMultipleAsync(query, new { request.PageSize, request.PageNumber });
+            var searchQueryCount = multipleQuery.Read<int>().FirstOrDefault();
             List<Advert> adverts = multipleQuery.Read<Advert>().ToList();
-            var result = new PaginatedList<Advert>(adverts, count, paginationRequest.PageSize, paginationRequest.PageNumber);
+            var result = new PaginatedList<Advert>(adverts, searchQueryCount, request.PageSize, request.PageNumber);
             return result;
         }
 
