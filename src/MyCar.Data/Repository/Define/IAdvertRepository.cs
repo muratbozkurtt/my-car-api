@@ -10,5 +10,6 @@ namespace MyCar.Data.Repository
     {
         Task<PaginatedList<Advert>> GetAdverts(GetAllAdvertsRequest request);
         Task<Advert> GetAdvertById(int id);
+        Task<bool> AddAdvertVisit(AddAdvertVisitRequest request);
     }
 }

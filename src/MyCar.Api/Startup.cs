@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using MyCar.Api.Middleware;
+using MyCar.Infrastructure.Context;
+using MyCar.Api.Filter;
 
 namespace MyCar.Api
 {
@@ -28,6 +30,7 @@ namespace MyCar.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyCar.Api", Version = "v1"});
+                c.OperationFilter<SwaggerHeaderParameterOperationFilter>();
             });
 
             //services.AddAutoMapper(Assembly.GetExecutingAssembly());   
@@ -37,6 +40,7 @@ namespace MyCar.Api
             });
 
             services.ConfigureRepositoryWrapper(Configuration);
+            services.AddScoped<IApplicationContext, ApplicationContext>();
 
             services.AddCors(c =>
             {

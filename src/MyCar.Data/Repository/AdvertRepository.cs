@@ -8,6 +8,7 @@ using System.Linq;
 using MyCar.Infrastructure.Entity;
 using MyCar.Infrastructure.Request;
 using MyCar.Infrastructure.Response;
+using System.Text;
 
 namespace MyCar.Data.Repository
 {
@@ -23,30 +24,50 @@ namespace MyCar.Data.Repository
         }
         public async Task<PaginatedList<Advert>> GetAdverts(GetAllAdvertsRequest request)
         {
-            string searchQuery = "Select COUNT(Distinct(Id)) From Advert (nolock) Where 1=1";
-            string filterQuery = "Select * From Advert (nolock) Where 1=1";
-            var query = string.Concat(searchQuery, filterQuery);
+            StringBuilder searchQuery = new StringBuilder();
+            StringBuilder filterQuery = new StringBuilder();
+            StringBuilder query = new StringBuilder();
+
+            searchQuery.Append("Select COUNT(Distinct(Id)) From Advert (nolock) Where 1=1 ");
+            filterQuery.Append("Select * From Advert (nolock) Where 1=1 ");
 
             if (request.CategoryId != null)
             {
-                string.Concat(query, "CategoryId=@CategoryId");
-                string.Concat(searchQuery, "CategoryId=@CategoryId");
+                searchQuery.Append(" AND CategoryId=@CategoryId ");
+                filterQuery.Append(" AND CategoryId=@CategoryId ");
             }
 
-            string.Concat(query, "ORDER BY ID OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
+            query.Append(searchQuery);
+            query.Append(filterQuery);
 
-            var multipleQuery = await _db.QueryMultipleAsync(query, new { request.PageSize, request.PageNumber });
+            query.Append(" ORDER BY ID OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
+
+            var multipleQuery = await _db.QueryMultipleAsync(query.ToString(), new { request.PageSize, request.PageNumber, request.CategoryId });
             var searchQueryCount = multipleQuery.Read<int>().FirstOrDefault();
             List<Advert> adverts = multipleQuery.Read<Advert>().ToList();
             var result = new PaginatedList<Advert>(adverts, searchQueryCount, request.PageSize, request.PageNumber);
             return result;
         }
-
         public async Task<Advert> GetAdvertById(int id)
         {
-            string query = @"Select * From Advert (nolock) Where Id=@Id";
+            string query = @"Select * From Advert (nolock) Where Id=@id";
             var result = await _db.QueryAsync<Advert>(query, new { id });
             return result.FirstOrDefault();
+        }
+
+        public async Task<bool> AddAdvertVisit(AddAdvertVisitRequest request)
+        {
+            string query = @"INSERT INTO AdvertVisit(AdvertId,IpAddress,VisitDate) VALUES(@AdvertId,@IpAddress,@VisitDate);
+                            SELECT LAST_INSERT_ID();";
+
+            var result = await _db.ExecuteAsync(query, new
+            {
+                request.AdvertId,
+                request.IpAdress,
+                request.VisitDate
+            });
+
+            return result > 0;
         }
     }
 }

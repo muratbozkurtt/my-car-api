@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCar.Infrastructure", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCar.Data", "src\MyCar.Data\MyCar.Data.csproj", "{4AEC1260-5589-43BD-B103-7B045C26E9FD}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0F1A69B0-A542-47C0-8969-0DB28183FE83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{4AEC1260-5589-43BD-B103-7B045C26E9FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AEC1260-5589-43BD-B103-7B045C26E9FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AEC1260-5589-43BD-B103-7B045C26E9FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1A69B0-A542-47C0-8969-0DB28183FE83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1A69B0-A542-47C0-8969-0DB28183FE83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1A69B0-A542-47C0-8969-0DB28183FE83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1A69B0-A542-47C0-8969-0DB28183FE83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  mycar.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DbConnection=Server=msSqlDb;Database=MyCar;User Id=sa;Password=Mycar123@"
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+    links: 
+      - msSqlDb # This service depends on redis. Start that first.
+     
+  msSqlDb:
+    container_name: msSqlDb
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - "1433:1433"
+    restart: unless-stopped
+    environment:
+      SA_PASSWORD: "Mycar123@"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./sqlserver-data1:/var/lib/sqlserver/data
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"
