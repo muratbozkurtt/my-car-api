@@ -8,6 +8,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "8000:80"
+    expose:
+    - 8000 
     restart: on-failure
     networks:
       - backend
@@ -18,7 +20,7 @@ services:
     container_name: msSqlDb
     image: mcr.microsoft.com/mssql/server
     ports:
-      - "1433:1433"
+      - "1435:1433"
     restart: unless-stopped
     environment:
       SA_PASSWORD: "Mycar123@"
@@ -27,6 +29,8 @@ services:
       - ./sqlserver-data1:/var/lib/sqlserver/data
     networks:
       - backend
+    expose:
+    - 1435
 
 networks:
   backend:
