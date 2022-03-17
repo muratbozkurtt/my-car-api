@@ -26,7 +26,7 @@ namespace MyCar.Api.Extensions
             .AddFluentMigratorCore()
             .ConfigureRunner(c => c.AddSqlServer2012()
             //TODO: We can use DBSettings!
-           .WithGlobalConnectionString("Server=db;database=master;uid=sa;pwd=Mycar123@;Connection Timeout=15;")
+           .WithGlobalConnectionString("Server=db;Initial Catalog=MyCar;uid=sa;pwd=Mycar123@;Connection Timeout=15")
            .ScanIn(typeof(InitialTables_202203160001).Assembly).For.Migrations());
 
             services.Configure<DBSettings>(configuration.GetSection("DBSettings"));
