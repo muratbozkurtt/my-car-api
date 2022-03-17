@@ -1,4 +1,4 @@
-# coin-market-api
+# my car api
 
 git clone https://github.com/muratbozkurtt/my-car-api.git
 
