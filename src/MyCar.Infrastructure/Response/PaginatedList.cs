@@ -7,17 +7,14 @@ namespace MyCar.Infrastructure.Response
     {
         public List<T> Items { get; }
 
-        public int PageIndex { get; }
+        public int Page { get; }
 
-        public int TotalPages { get; }
+        public int Total { get; }
 
-        public int TotalCount { get; }
-
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        public PaginatedList(List<T> items, int count, int pageIndex)
         {
-            PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            TotalCount = count;
+            Page = pageIndex;
+            Total = count;
             Items = items;
         }
     }

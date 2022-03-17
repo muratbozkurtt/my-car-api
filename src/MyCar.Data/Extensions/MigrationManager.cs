@@ -19,6 +19,7 @@ namespace MyCar.Data.Extensions
                     databaseService.CreateDatabase("MyCar");
                     migrationService.ListMigrations();
                     migrationService.MigrateUp(202203160001);
+                    migrationService.MigrateUp(202203160002);
                 }
                 catch
                 {

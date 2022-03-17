@@ -5,12 +5,11 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using System.Linq;
-using MyCar.Infrastructure.Entity;
 using MyCar.Infrastructure.Request;
 using MyCar.Infrastructure.Response;
 using System.Text;
-using MyCar.Infrastructure.Helper;
 using MyCar.Infrastructure.Constans;
+using MyCar.Data.Entity;
 
 namespace MyCar.Data.Repository
 {
@@ -60,10 +59,9 @@ namespace MyCar.Data.Repository
             query.Append(searchQuery);
             query.Append(filterQuery);
 
-            if (!(request.SortOrder == AdvertSorts.Price || request.SortOrder == AdvertSorts.Km || request.SortOrder == request.Fuel))
-            {
-                request.SortOrder = "Id";
-            }
+            if (request.SortOrder == AdvertSorts.Price || request.SortOrder == AdvertSorts.Km || request.SortOrder == request.Fuel)
+                request.SortOrder = request.SortOrder;
+            else request.SortOrder = "Id";
 
             query.Append($" ORDER BY {request.SortOrder} DESC OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
 
@@ -79,7 +77,7 @@ namespace MyCar.Data.Repository
                               });
             var searchQueryCount = multipleQuery.Read<int>().FirstOrDefault();
             List<Advert> adverts = multipleQuery.Read<Advert>().ToList();
-            var result = new PaginatedList<Advert>(adverts, searchQueryCount, request.PageSize, request.PageNumber);
+            var result = new PaginatedList<Advert>(adverts, searchQueryCount, request.PageNumber);
             return result;
         }
         public async Task<Advert> GetAdvertByIdAsync(int id)

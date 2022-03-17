@@ -47,7 +47,7 @@ namespace MyCar.Api.Controllers
             {
                 return BadRequest(result);
             }
-            return Created("", null);
+            return Ok(result);
         }
 
     }

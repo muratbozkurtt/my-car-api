@@ -1,6 +1,6 @@
-﻿using MyCar.Data.Repository;
+﻿using MyCar.Data.Entity;
+using MyCar.Data.Repository;
 using MyCar.Infrastructure.Context;
-using MyCar.Infrastructure.Entity;
 using MyCar.Infrastructure.Helper;
 using MyCar.Infrastructure.Request;
 using MyCar.Infrastructure.Response;

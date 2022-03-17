@@ -45,7 +45,6 @@ namespace MyCar.Api
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
             });
             services.AddControllers();
-            services.AddMemoryCache();
             services.AddHttpContextAccessor();
             services.AddOptions();
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -63,7 +62,8 @@ namespace MyCar.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyCar.Api v1"));
             }
             app.UseRouting();
-            
+            app.UseHttpsRedirection();
+
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
