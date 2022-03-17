@@ -4,7 +4,6 @@ services:
   mycar.api:
     environment:
      - ASPNETCORE_ENVIRONMENT=Development
-     - "ConnectionStrings:DatabaseConnection=Server=db;Database=master;User Id=sa;Password=Mycar123@"
      - ASPNETCORE_URLS=http://+:80
     ports:
       - "8000:80"

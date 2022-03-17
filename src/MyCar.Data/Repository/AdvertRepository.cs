@@ -59,9 +59,16 @@ namespace MyCar.Data.Repository
             query.Append(searchQuery);
             query.Append(filterQuery);
 
-            if (request.SortOrder == AdvertSorts.Price || request.SortOrder == AdvertSorts.Km || request.SortOrder == request.Fuel)
-                request.SortOrder = request.SortOrder;
-            else request.SortOrder = "Id";
+            if (request.SortOrder == null)
+            {
+                request.SortOrder = "Id";
+            }
+            else
+            {
+                if (request.SortOrder == AdvertSorts.Price || request.SortOrder == AdvertSorts.Km || request.SortOrder == request.Fuel)
+                    request.SortOrder = request.SortOrder;
+                else request.SortOrder = "Id";
+            }
 
             query.Append($" ORDER BY {request.SortOrder} DESC OFFSET @PageSize * (@PageNumber-1) ROWS FETCH NEXT @PageSize ROWS ONLY");
 
