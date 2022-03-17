@@ -3,25 +3,19 @@ version: '3.4'
 services:
   mycar.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:DbConnection=Server=msSqlDb;Database=MyCar;User Id=sa;Password=Mycar123@"
-      - ASPNETCORE_URLS=http://+:80
+     - ASPNETCORE_ENVIRONMENT=Development
+     - "ConnectionStrings:DatabaseConnection=Server=db;Database=master;User Id=sa;Password=Mycar123@"
+     - ASPNETCORE_URLS=http://+:80
     ports:
       - "8000:80"
-    expose:
-    - 8000 
+    depends_on:
+       - db
     restart: on-failure
     networks:
       - backend
-    links: 
-      - msSqlDb
      
-  msSqlDb:
-    container_name: msSqlDb
+  db:
     image: mcr.microsoft.com/mssql/server
-    ports:
-      - "1435:1433"
-    restart: unless-stopped
     environment:
       SA_PASSWORD: "Mycar123@"
       ACCEPT_EULA: "Y"
@@ -29,8 +23,6 @@ services:
       - ./sqlserver-data1:/var/lib/sqlserver/data
     networks:
       - backend
-    expose:
-    - 1435
 
 networks:
   backend:
